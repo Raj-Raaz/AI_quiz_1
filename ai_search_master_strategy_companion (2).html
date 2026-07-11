@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Strategy Guide & Study Companion: AI Search Methods</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for beautiful modern icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax for rendering gorgeous algorithmic/math formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Animated transition for smooth tab switching */
+        .tab-content {
+            transition: opacity 0.25s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+
+    <!-- Header Hero Banner -->
+    <header class="bg-gradient-to-r from-brand-900 via-brand-700 to-indigo-800 text-white shadow-md relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent)] pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <span class="bg-indigo-500/30 text-indigo-200 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-indigo-400/20">
+                        <i class="fa-solid fa-graduation-cap mr-1"></i> IIT-M BS in Data Science Core Companion
+                    </span>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mt-2">
+                        AI Search Methods for Problem Solving
+                    </h1>
+                    <p class="text-indigo-200 text-sm sm:text-base mt-2 max-w-2xl">
+                        Comprehensive pattern analysis, procedural checklists, and step-by-step interactive simulators built strictly from 
+                        historical exams (2024T1 - 2026T1).
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 text-center">
+                        <p class="text-xs text-indigo-200 uppercase font-semibold">Exam Level</p>
+                        <p class="text-xl font-bold">Advanced</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 border border-white/10 text-center">
+                        <p class="text-xs text-indigo-200 uppercase font-semibold">Key Topics</p>
+                        <p class="text-xl font-bold">Heuristics &amp; GA</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex space-x-1 sm:space-x-4 overflow-x-auto py-3 no-scrollbar">
+                <button onclick="switchTab('roadmap')" id="tab-roadmap" class="tab-btn px-4 py-2 text-sm font-semibold rounded-lg flex items-center gap-2 whitespace-nowrap transition-all duration-200 bg-brand-50 text-brand-700">
+                    <i class="fa-solid fa-route"></i> Recommended Roadmap
+                </button>
+                <button onclick="switchTab('patterns')" id="tab-patterns" class="tab-btn px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-950 hover:bg-slate-50 rounded-lg flex items-center gap-2 whitespace-nowrap transition-all duration-200">
+                    <i class="fa-solid fa-copy"></i> Repeated Exam Patterns
+                </button>
+                <button onclick="switchTab('tricks')" id="tab-tricks" class="tab-btn px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-950 hover:bg-slate-50 rounded-lg flex items-center gap-2 whitespace-nowrap transition-all duration-200">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Formulas &amp; Tricks
+                </button>
+                <button onclick="switchTab('questions')" id="tab-questions" class="tab-btn px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-950 hover:bg-slate-50 rounded-lg flex items-center gap-2 whitespace-nowrap transition-all duration-200">
+                    <i class="fa-solid fa-list-check"></i> Past Year Questions
+                </button>
+                <button onclick="switchTab('simulators')" id="tab-simulators" class="tab-btn px-4 py-2 text-sm font-semibold text-slate-600 hover:text-slate-950 hover:bg-slate-50 rounded-lg flex items-center gap-2 whitespace-nowrap transition-all duration-200">
+                    <i class="fa-solid fa-gamepad"></i> Interactive Study Simulators
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        
+        <!-- ==================== TAB: RECOMMENDED ROADMAP ==================== -->
+        <div id="content-roadmap" class="tab-pane active space-y-6">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Checklist / Left Column -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-900">Your Study Progress Tracker</h2>
+                                <p class="text-xs text-slate-500 mt-1">Check things off as you master them. Progress is saved automatically.</p>
+                            </div>
+                            <span id="progress-percent" class="bg-brand-100 text-brand-800 text-xs font-bold px-3 py-1 rounded-full">0% Complete</span>
+                        </div>
+                        
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full mb-6 overflow-hidden">
+                            <div id="progress-bar-fill" class="bg-brand-500 h-full w-0 transition-all duration-500"></div>
+                        </div>
+
+                        <!-- Roadmap Stages -->
+                        <div class="space-y-6">
+                            <!-- Stage 1 -->
+                            <div class="border-l-4 border-emerald-500 pl-4 space-y-3">
+                                <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">1</span>
+                                    Stage 1: State Space Modeling &amp; Uninformed Trace (First 3 Days)
+                                </h3>
+                                <p class="text-xs text-slate-500">Lay down the bedrock logic. Ensure you can visualize states and graph conversions.</p>
+                                <div class="space-y-2.5">
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-1-1" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">State Transition Matrices &amp; Reachability</span>
+                                            <p class="text-xs text-slate-500">Trace puzzle steps (Water Jug, Hanoi, 5-Puzzle) and verify exact reachable states in $n$ steps.</p>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-1-2" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">DFS / BFS Tracing and Path Formatting</span>
+                                            <p class="text-xs text-slate-500">Practice writing correct sequential traces. Watch out for strict comma separation in answers.</p>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-1-3" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">DFID Complexity &amp; Mechanics</span>
+                                            <p class="text-xs text-slate-500">Understand the difference between DFID-N (new nodes) and DFID-C (reopened nodes).</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Stage 2 -->
+                            <div class="border-l-4 border-indigo-500 pl-4 space-y-3">
+                                <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs">2</span>
+                                    Stage 2: Informed Searches &amp; Heuristics (Next 4 Days)
+                                </h3>
+                                <p class="text-xs text-slate-500">Understand the transition from blind search to heuristically-driven optimization.</p>
+                                <div class="space-y-2.5">
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-2-1" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">Best-First Search Hand-Tracing</span>
+                                            <p class="text-xs text-slate-500">Learn to maintain a sorted $OPEN$ queue of nodes by their heuristic values, breaking ties alphabetically.</p>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-2-2" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">Hill Climbing Termination Criteria</span>
+                                            <p class="text-xs text-slate-500">Identify local maxima/minima. Master the exact criteria of when Hill Climbing yields <code>NIL</code> path.</p>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-2-3" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">Stochastic Search Probabilities</span>
+                                            <p class="text-xs text-slate-500">Understand temperature parameters $T \to \infty$ vs $T \to 0$ inside probability formulas.</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Stage 3 -->
+                            <div class="border-l-4 border-amber-500 pl-4 space-y-3">
+                                <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs">3</span>
+                                    Stage 3: TSP Heuristics &amp; Combinatorics (Next 4 Days)
+                                </h3>
+                                <p class="text-xs text-slate-500">These topics constitute high-value, calculation-dense exam blocks.</p>
+                                <div class="space-y-2.5">
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-3-1" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">Nearest Neighbor &amp; Greedy Heuristic</span>
+                                            <p class="text-xs text-slate-500">Master building tours and calculating exact sequence costs from asymmetrical/symmetrical distance matrices.</p>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-3-2" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">Savings Heuristic Master-Class</span>
+                                            <p class="text-xs text-slate-500">Learn to build the savings list with reference to a fulcrum node, merging edges without creating sub-loops.</p>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-3-3" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">Tour Neighborhood operators (2-city exchange, etc.)</span>
+                                            <p class="text-xs text-slate-500">Calculate neighbors generated given $N$ cities.</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Stage 4 -->
+                            <div class="border-l-4 border-rose-500 pl-4 space-y-3">
+                                <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs">4</span>
+                                    Stage 4: Genetic Algorithms &amp; Interdisciplinary Fields (Last 3 Days)
+                                </h3>
+                                <p class="text-xs text-slate-500">The mechanics must be precise. One mapping offset will break the entire problem.</p>
+                                <div class="space-y-2.5">
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-4-1" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">Tour Representations (Adjacency, Ordinal, Path)</span>
+                                            <p class="text-xs text-slate-500">Convert path sequences into Ordinal lists manually with reference indices.</p>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-4-2" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">Cycle &amp; PMX Crossover Operations</span>
+                                            <p class="text-xs text-slate-500">Manually trace PMX mappings and cycle loops. Perfect this using our Interactive Simulator tab.</p>
+                                        </div>
+                                    </label>
+                                    <label class="flex items-start gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                                        <input type="checkbox" id="chk-4-3" onchange="updateProgress()" class="mt-1 rounded text-brand-600 focus:ring-brand-500">
+                                        <div>
+                                            <span class="text-sm font-semibold text-slate-800">Software Testing (du-paths) &amp; Operating Systems (xv6)</span>
+                                            <p class="text-xs text-slate-500">Ensure you know how to count definition-use (du) paths, du-pairs, and classify xv6 scheduler process states.</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Info Grid / Right Column -->
+                <div class="space-y-6">
+                    <!-- Recommended Priority Box -->
+                    <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-sm relative overflow-hidden">
+                        <div class="absolute inset-0 bg-brand-500/10 pointer-events-none"></div>
+                        <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-brand-400"></i> Topic Priority Matrix
+                        </h3>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                            Based on historical term analysis, allocate your study time according to this strict priority tier system:
+                        </p>
+                        
+                        <div class="space-y-4">
+                            <!-- High Priority -->
+                            <div class="bg-rose-500/20 border border-rose-500/30 rounded-xl p-3 relative">
+                                <div class="absolute top-0 right-0 p-2 opacity-20"><i class="fa-solid fa-fire text-2xl"></i></div>
+                                <h4 class="text-rose-400 font-bold text-sm flex items-center gap-2 mb-2">
+                                    <i class="fa-solid fa-circle-exclamation"></i> High Priority (Must Master)
+                                </h4>
+                                <ul class="text-xs text-slate-200 space-y-1.5 pl-2 list-disc list-inside">
+                                    <li><strong>Blind &amp; Informed Search Tracing:</strong> DFS, BFS, Best-First, Hill Climbing sequences (Guaranteed 8-10 marks).</li>
+                                    <li><strong>TSP Core Heuristics:</strong> Nearest Neighbor &amp; Greedy Tour trace + cost calculation.</li>
+                                    <li><strong>Genetic Algorithms:</strong> PMX &amp; Cycle Crossover tracing, Path-to-Ordinal conversions.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Mid Priority -->
+                            <div class="bg-amber-500/20 border border-amber-500/30 rounded-xl p-3 relative">
+                                <div class="absolute top-0 right-0 p-2 opacity-20"><i class="fa-solid fa-star-half-stroke text-2xl"></i></div>
+                                <h4 class="text-amber-400 font-bold text-sm flex items-center gap-2 mb-2">
+                                    <i class="fa-solid fa-circle-half-stroke"></i> Mid Priority (Score Maximizers)
+                                </h4>
+                                <ul class="text-xs text-slate-200 space-y-1.5 pl-2 list-disc list-inside">
+                                    <li><strong>Savings Heuristic:</strong> Fulcrum node mathematics and edge merging rules.</li>
+                                    <li><strong>State Space Modeling:</strong> Graph reachability, exact move counts (Water Jug, 5-Puzzle, N-Square-Touch).</li>
+                                    <li><strong>Grid Distances:</strong> Computing exact Manhattan/Euclidean distances for custom heuristic evaluations.</li>
+                                </ul>
+                            </div>
+
+                            <!-- Least Priority -->
+                            <div class="bg-emerald-500/20 border border-emerald-500/30 rounded-xl p-3 relative">
+                                <div class="absolute top-0 right-0 p-2 opacity-20"><i class="fa-solid fa-leaf text-2xl"></i></div>
+                                <h4 class="text-emerald-400 font-bold text-sm flex items-center gap-2 mb-2">
+                                    <i class="fa-solid fa-circle-down"></i> Least Priority (Niche / Low Weight)
+                                </h4>
+                                <ul class="text-xs text-slate-200 space-y-1.5 pl-2 list-disc list-inside">
+                                    <li><strong>Operating Systems:</strong> xv6 process states (ZOMBIE, SLEEPING, etc.).</li>
+                                    <li><strong>Software Testing:</strong> Definition-Use (du-paths) trace counting.</li>
+                                    <li><strong>Stochastic Equations:</strong> Simulated Annealing probability limits (T &rarr; &infin;).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exam Quick Facts -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                        <h3 class="font-bold text-slate-900">Exam Characteristics</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between border-b pb-2">
+                                <span class="text-xs text-slate-500">Grader Mechanics</span>
+                                <span class="text-xs font-semibold bg-rose-100 text-rose-800 px-2 py-0.5 rounded">Exact String Matching</span>
+                            </div>
+                            <div class="flex items-center justify-between border-b pb-2">
+                                <span class="text-xs text-slate-500">Tie-Breaking Rule</span>
+                                <span class="text-xs font-semibold bg-slate-100 text-slate-800 px-2 py-0.5 rounded">Alphabetical Priority</span>
+                            </div>
+                            <div class="flex items-center justify-between border-b pb-2">
+                                <span class="text-xs text-slate-500">Seen-Lists Filter</span>
+                                <span class="text-xs font-semibold bg-slate-100 text-slate-800 px-2 py-0.5 rounded">Strict RemoveSeen</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-slate-500">Calculators Allowed</span>
+                                <span class="text-xs font-semibold bg-slate-100 text-slate-800 px-2 py-0.5 rounded">None / Scientific Only</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ==================== TAB: REPEATED PATTERNS ==================== -->
+        <div id="content-patterns" class="tab-pane hidden space-y-6">
+            
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-copy text-brand-500"></i> Repeated Structural Patterns
+                </h2>
+                <p class="text-sm text-slate-500 mb-6">
+                    Analyzing the past papers reveal clear architectural templates. The exam graders use identical core engines with minor seed modifications. Master these five distinct question templates.
+                </p>
+
+                <div class="space-y-8">
+                    <!-- Pattern 1 -->
+                    <div class="border-l-4 border-brand-500 pl-6 space-y-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2.5 py-1 rounded">Pattern #1</span>
+                        <h3 class="text-lg font-bold text-slate-900">Custom Grid Path-Tracing (Q25 - Q32 Template)</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Every term includes a 10x10 custom coordinate map (connected by two-way paths) where students must output the exact trace and path for DFS, BFS, Best-First, and Hill Climbing.
+                        </p>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                            <span class="font-bold text-slate-700 block">Historical Evidence:</span>
+                            <ul class="list-disc pl-4 space-y-1 text-slate-600">
+                                <li><strong>2024T1 &amp; 2024T2 Quiz1:</strong> Layout containing locations S, B, H, A, I, D, E, F, C, G on a coordinate grid. Starting node is $S$, Goal is $G$. Heuristics calculated using standard grid Manhattan distance.</li>
+                                <li><strong>2024T3 Quiz1:</strong> Start $S$, Goal $G$ utilizing Manhattan distance, generating a strict alphabetical node traversal priority.</li>
+                                <li><strong>2026T1 AI:</strong> Replaced the generic S-G map with a customized 4x3 chessboard Knight's Tour grid. Distances computed via Euclidean formulas (e.g., $d(G,D) = 3.6$), but retained the exact DFS/BFS/BFS/Hill Climbing structural questions sequentially!</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pattern 2 -->
+                    <div class="border-l-4 border-emerald-500 pl-6 space-y-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded">Pattern #2</span>
+                        <h3 class="text-lg font-bold text-slate-900">Genetic Tour Representation &amp; Crossover (Q33 - Q36 Template)</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Features a 10 or 12-node circular TSP graph. This block tests representation conversions (Path, Adjacency, and Ordinal formats) followed by hand-tracing crossovers (PMX and Cycle).
+                        </p>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                            <span class="font-bold text-slate-700 block">Historical Evidence:</span>
+                            <ul class="list-disc pl-4 space-y-1 text-slate-600">
+                                <li><strong>2024T1 &amp; 2024T2 Quiz1:</strong> 12 cities (A to L) path conversion to Ordinal lists. Child production via Partially Mapped Crossover (PMX) using slots 5-8 as the mapping segments.</li>
+                                <li><strong>2024T3 Quiz1:</strong> 10 cities (D to M). Path-to-Ordinal representation conversion followed by child extraction via Cycle Crossover.</li>
+                                <li><strong>2025T1 Quiz1:</strong> 10 cities (D to M). Cycles mapped directly.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pattern 3 -->
+                    <div class="border-l-4 border-amber-500 pl-6 space-y-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-1 rounded">Pattern #3</span>
+                        <h3 class="text-lg font-bold text-slate-900">Combinatorial TSP Algorithms (Q37 - Q41 Template)</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Given a symmetrical $5\times5$ or $6\times6$ distance matrix, students must calculate Nearest Neighbor and Greedy TSP routes, as well as the Savings Heuristic, providing both the path strings and numeric totals.
+                        </p>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                            <span class="font-bold text-slate-700 block">Historical Evidence:</span>
+                            <ul class="list-disc pl-4 space-y-1 text-slate-600">
+                                <li><strong>2024T1 Quiz1:</strong> 6-city asymmetrical map matrix with costs. Nearest Neighbor output: <code>E,C,D,B,F,A</code> with cost $229$. Greedy output: cost $224$.</li>
+                                <li><strong>2024T2 Quiz1:</strong> 6-city matrix starting from C. Nearest Neighbor cost $222$. Greedy Heuristic cost $227$.</li>
+                                <li><strong>2024T3 Quiz1:</strong> 5-city matrix. Nearest Neighbor cost $252$. Greedy Heuristic: <code>B,D,C,E,A</code> with cost $251$.</li>
+                                <li><strong>2025T1 Quiz1:</strong> 5-city matrix. Nearest Neighbor starting from C: <code>C,B,D,E,A</code>. Savings Heuristic is explicitly tested using "A" as the base node. First merge selection yields savings of $120$.</li>
+                                <li><strong>2026T1 AI:</strong> 5-city matrix. Savings Heuristic fulcrum at "A". Calculate missing savings points, trace optimal tour path, and output formula representation bounds.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Pattern 4 -->
+                    <div class="border-l-4 border-rose-500 pl-6 space-y-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-1 rounded">Pattern #4</span>
+                        <h3 class="text-lg font-bold text-slate-900">Discrete State Space Mechanics (Water Jug, 5-Puzzle, N-Square-Touch)</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Calculates move reachability, graph connectivity, reversibility, and unique state permutations for classical search puzzles.
+                        </p>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2">
+                            <span class="font-bold text-slate-700 block">Historical Evidence:</span>
+                            <ul class="list-disc pl-4 space-y-1 text-slate-600">
+                                <li><strong>2024T2 Quiz1:</strong> 3-2-1 Water Jug state graph modeling. Identifying occurrences of states like $(2,1,0)$ and verifying reachability.</li>
+                                <li><strong>2024T3 Quiz1:</strong> 5-Puzzle state transition modeling. Finding configurations reachable in exactly 3 steps.</li>
+                                <li><strong>2025T1 Quiz1:</strong> 2-Square-Touch board game mechanics. State space size, reachability of state $01/10$, reversibility rules.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ==================== TAB: TIPS & TRICKS ==================== -->
+        <div id="content-tricks" class="tab-pane hidden space-y-6">
+            
+            <!-- Formulas Cheat Sheet -->
+            <div class="bg-indigo-950 text-white p-6 rounded-2xl border border-indigo-800 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                    <i class="fa-solid fa-square-root-variable text-9xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-indigo-100 flex items-center gap-2 mb-4 relative z-10">
+                    <i class="fa-solid fa-subscript text-indigo-400"></i> Essential Formulas Cheat Sheet
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+                    <!-- Formula 1 -->
+                    <div class="bg-indigo-900/50 p-4 rounded-xl border border-indigo-700/50">
+                        <span class="text-xs text-indigo-300 font-bold uppercase tracking-wider block mb-1">Grid Heuristics</span>
+                        <div class="text-xs space-y-2">
+                            <p><strong class="text-white block mb-0.5">Manhattan Distance:</strong> <code class="bg-indigo-950 px-1.5 py-1 rounded text-indigo-200 block font-mono text-[10px]">d = |x₁ - x₂| + |y₁ - y₂|</code></p>
+                            <p><strong class="text-white block mb-0.5">Euclidean Distance:</strong> <code class="bg-indigo-950 px-1.5 py-1 rounded text-indigo-200 block font-mono text-[10px]">d = &radic;((x₁ - x₂)² + (y₁ - y₂)²)</code></p>
+                        </div>
+                    </div>
+
+                    <!-- Formula 2 -->
+                    <div class="bg-indigo-900/50 p-4 rounded-xl border border-indigo-700/50">
+                        <span class="text-xs text-indigo-300 font-bold uppercase tracking-wider block mb-1">Savings Heuristic</span>
+                        <div class="text-xs space-y-2">
+                            <p><strong class="text-white block mb-0.5">Savings S(i,j):</strong> <code class="bg-indigo-950 px-1.5 py-1 rounded text-emerald-300 block font-mono text-[10px]">d(i,F) + d(j,F) - d(i,j)</code></p>
+                            <p class="text-[10px] text-indigo-200/70 italic">*Where F is the fulcrum (base) node. Select highest valid S(i,j) without closing early loops.</p>
+                        </div>
+                    </div>
+
+                    <!-- Formula 3 -->
+                    <div class="bg-indigo-900/50 p-4 rounded-xl border border-indigo-700/50">
+                        <span class="text-xs text-indigo-300 font-bold uppercase tracking-wider block mb-1">Combinatorics (TSP)</span>
+                        <div class="text-xs space-y-2">
+                            <p><strong class="text-white block mb-0.5">Total Tours (Asym):</strong> <code class="bg-indigo-950 px-1.5 py-1 rounded text-amber-300 block font-mono text-[10px]">(N-1)!</code></p>
+                            <p><strong class="text-white block mb-0.5">Total Tours (Sym):</strong> <code class="bg-indigo-950 px-1.5 py-1 rounded text-amber-300 block font-mono text-[10px]">(N-1)! / 2</code></p>
+                        </div>
+                    </div>
+
+                    <!-- Formula 4 -->
+                    <div class="bg-indigo-900/50 p-4 rounded-xl border border-indigo-700/50">
+                        <span class="text-xs text-indigo-300 font-bold uppercase tracking-wider block mb-1">Stochastic Search</span>
+                        <div class="text-xs space-y-2">
+                            <p><strong class="text-white block mb-0.5">Move Probability:</strong> <code class="bg-indigo-950 px-1.5 py-1 rounded text-rose-300 block font-mono text-[10px]">P = 1 / (1 + e^(-&Delta;E/T))</code></p>
+                            <p class="text-[10px] text-indigo-200/70 italic">*As Temp (T) &rarr; &infin;, P &rarr; 0.5 (random walk). As T &rarr; 0, P gets strict.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Tie Breaking Card -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-scale-unbalanced-force text-brand-500"></i> Trick #1: Strict Alphabetical Order Rules
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        The single biggest point loss on historical exams comes from expanding neighbors in the wrong sequence during blind searches.
+                    </p>
+                    <div class="bg-slate-50 p-4 rounded-xl text-xs space-y-2">
+                        <span class="font-bold text-slate-700">How to handle children:</span>
+                        <ol class="list-decimal pl-4 space-y-1.5 text-slate-600">
+                            <li>Generate *all* valid immediate neighbors of the current parent node first.</li>
+                            <li><strong>Sort them alphabetically immediately</strong> (e.g., if neighbors of D are B, A, E, they must be formatted as A, B, E).</li>
+                            <li>Run the <code>RemoveSeen</code> check *after* alphabetical sorting. Any node already present in either $OPEN$ or $CLOSED$ queues is dropped.</li>
+                            <li>Insert the surviving sorted neighbors into the $OPEN$ list based on the search type:
+                                <ul class="list-disc pl-4 mt-1 space-y-0.5">
+                                    <li><strong>DFS:</strong> Prepend to the *front* of the list (preserving their alphabetical order, e.g., A first, then B, then E).</li>
+                                    <li><strong>BFS:</strong> Append to the *back* of the list.</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- GA Conversion Card -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-down-9-1 text-emerald-500"></i> Trick #2: Path-to-Ordinal Conversion Shortcuts
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Converting representations manually is error-prone. Use this visual subtraction trick:
+                    </p>
+                    <div class="bg-slate-50 p-4 rounded-xl text-xs space-y-3">
+                        <div>
+                            <span class="font-bold text-slate-700">Reference List:</span>
+                            <code class="block mt-1 bg-slate-200 px-2 py-1 rounded font-mono text-brand-800">[A, B, C, D, E, F, G, H, I, J, K, L]</code>
+                        </div>
+                        <div>
+                            <span class="font-bold text-slate-700">Task:</span> Convert path <code class="bg-slate-200 px-1 py-0.5 rounded font-mono">E, A, D, ...</code>
+                        </div>
+                        <ol class="list-decimal pl-4 space-y-1.5 text-slate-600">
+                            <li>Look at the first element <code class="font-mono font-bold">E</code>. In our reference list, it is at index <strong class="font-semibold text-slate-800">5</strong> (using 1-based indexing: A=1, B=2, C=3, D=4, E=5). This is your first ordinal digit: <strong class="text-emerald-600 font-bold">5</strong>.</li>
+                            <li><strong>Delete E</strong> from the reference list. It becomes <code class="font-mono text-slate-500">[A, B, C, D, F, G, H, I, J, K, L]</code>.</li>
+                            <li>Look at the next element <code class="font-mono font-bold">A</code>. In our modified reference list, it is at index <strong class="font-semibold text-slate-800">1</strong>. This is your second ordinal digit: <strong class="text-emerald-600 font-bold">1</strong>.</li>
+                            <li><strong>Delete A</strong>. The reference list is now <code class="font-mono text-slate-500">[B, C, D, F, G, H, I, J, K, L]</code>.</li>
+                            <li>Next element is <code class="font-mono font-bold">D</code>. In our modified reference list, it is at index <strong class="font-semibold text-slate-800">3</strong>. This is your third ordinal digit: <strong class="text-emerald-600 font-bold">3</strong>.</li>
+                        </ol>
+                        <p class="text-xs text-slate-500 italic border-t pt-2">Repeat this step-by-step. The final digit is always 1.</p>
+                    </div>
+                </div>
+
+                <!-- Savings Heuristic Shortcuts -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-amber-500"></i> Trick #3: Savings Heuristic Calculation
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        To compute savings when merging two nodes $i$ and $j$ around a base (fulcrum) node $F$:
+                    </p>
+                    <div class="bg-slate-50 p-4 rounded-xl text-xs space-y-2">
+                        <span class="font-bold text-slate-700 block">The Core Formula:</span>
+                        <div class="bg-slate-200 p-2.5 rounded text-center font-mono text-sm text-slate-800 my-2">
+                            $$S(i,j) = d(i, F) + d(j, F) - d(i,j)$$
+                        </div>
+                        <p class="text-slate-600 leading-relaxed">
+                            Where $d(x,y)$ is the direct edge cost in the distance matrix.
+                        </p>
+                        <p class="text-slate-600 font-semibold border-t pt-2 mt-2">Rule of Merging:</p>
+                        <ul class="list-disc pl-4 space-y-1 text-slate-600">
+                            <li>Sort the calculated savings values in **descending** order.</li>
+                            <li>Choose the highest savings edge first.</li>
+                            <li><strong>Never</strong> select an edge that creates a closed loop (unless it contains all the cities, marking the final path completion).</li>
+                            <li><strong>Never</strong> select a node that is already connected to two other nodes in the active route (degree constraint).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Grader String Format -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-keyboard text-rose-500"></i> Trick #4: Zero-Tolerance Grader Formatting
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        The IIT-M grading script uses strict exact string evaluations. Even if your math is correct, formatting errors can cost you the points.
+                    </p>
+                    <div class="bg-slate-50 p-4 rounded-xl text-xs space-y-3">
+                        <div class="flex items-center gap-2 border-b pb-2">
+                            <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">CORRECT</span>
+                            <code class="font-mono font-bold text-slate-800">S,B,A,C,E,G</code>
+                        </div>
+                        <div class="flex items-center gap-2 border-b pb-2">
+                            <span class="bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-bold">WRONG</span>
+                            <code class="font-mono text-slate-400">S, B, A, C, E, G</code> <span class="text-rose-500">(contains spaces)</span>
+                        </div>
+                        <div class="flex items-center gap-2 border-b pb-2">
+                            <span class="bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-bold">WRONG</span>
+                            <code class="font-mono text-slate-400">S,B,A,C,E,G.</code> <span class="text-rose-500">(trailing period)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-bold">WRONG</span>
+                            <code class="font-mono text-slate-400">S-B-A-C-E-G</code> <span class="text-rose-500">(wrong separator)</span>
+                        </div>
+                        <p class="text-xs text-slate-500 italic mt-2">
+                            Ensure you lock CAPS lock and strictly avoid using spaces or special symbols unless prompted.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ==================== TAB: PAST YEAR QUESTIONS ==================== -->
+        <div id="content-questions" class="tab-pane hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Complete Verbatim Question Archive (Tagged by Source)</h2>
+                <p class="text-sm text-slate-500 mb-2">
+                    Every unique question and its options have been extracted <strong>verbatim</strong> from the 2024-2026 exam papers. 
+                    Administrative questions (like "Did you get graph paper?") were excluded. 
+                </p>
+                <div class="bg-brand-50 border border-brand-100 rounded-lg p-3 text-xs text-brand-800">
+                    <i class="fa-solid fa-circle-info mr-1"></i> <strong>Note on Search/TSP Blocks:</strong> Because the IIT-M grading engine uses a strict template, the exam asks the <em>exact same set of 8 algorithm tracing questions</em> every term, just with a different graph or matrix. We have grouped these into single template blocks tagged with all the years they appeared.
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                
+                <!-- Category 1: State Space Search & Properties -->
+                <details class="group bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="bg-brand-50 hover:bg-brand-100 cursor-pointer p-4 font-bold text-brand-800 flex justify-between items-center transition-colors">
+                        <span><i class="fa-solid fa-network-wired mr-2"></i> STATE SPACE SEARCH &amp; PROPERTIES</span>
+                        <i class="fa-solid fa-chevron-down transform group-open:rotate-180 transition-transform text-brand-500"></i>
+                    </summary>
+                    <div class="p-6 space-y-6 bg-white border-t border-slate-200">
+                        
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">One needs to count the number of nodes visited in each cycle of DFID</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> to compute the complexity of search</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> to make sure that the path returned is the shortest</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> to prevent the algorithm from getting into an infinite loop on an INFINITE graph when a goal node exists in the connected component</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> to prevent the algorithm from getting into an infinite loop on a FINITE graph when the goal node does not exist in the connected component</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Which of the following is/are guaranteed in any state space?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> Each move is reversible.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> Each state is reachable from every other state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> The goal state is reachable from the start state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> None of these.</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Model the tower of Hanoi problem having three pillars (A,B,C) and three disks (1,2,3) as a state space search problem. Each pillar essentially acts like a stack, where only the disk at the top of the stack is accessible. A move involves popping a disk from one stack and pushing to another stack, where only one disk can be transferred in a single move. A state is represented as a tuple (a,b,c)... Starting from (123, NIL, NIL), which of the following states are reachable in 3 moves that do not repeat any states along a path, like x --> y--> x.</p>
+                            
+                            <!-- Tower of Hanoi SVG Representation -->
+                            <div class="flex justify-center items-end gap-12 my-6 p-6 bg-slate-50 rounded-xl border border-slate-200 shadow-inner">
+                                <!-- Peg A -->
+                                <div class="flex flex-col items-center">
+                                    <div class="w-16 h-5 bg-brand-500 rounded-full mb-1 text-center text-[11px] text-white font-bold leading-5 shadow-sm">1</div>
+                                    <div class="w-20 h-5 bg-brand-500 rounded-full mb-1 text-center text-[11px] text-white font-bold leading-5 shadow-sm">2</div>
+                                    <div class="w-24 h-5 bg-brand-500 rounded-full text-center text-[11px] text-white font-bold leading-5 shadow-sm">3</div>
+                                    <div class="w-32 h-3 bg-slate-800 mt-1 rounded-sm shadow-md"></div>
+                                    <span class="text-sm font-black mt-2 text-slate-700">(A)</span>
+                                </div>
+                                <!-- Peg B -->
+                                <div class="flex flex-col items-center">
+                                    <div class="w-3 h-16 bg-slate-300 rounded-t-sm border-x border-slate-400"></div>
+                                    <div class="w-32 h-3 bg-slate-800 rounded-sm shadow-md"></div>
+                                    <span class="text-sm font-black mt-2 text-slate-700">(B)</span>
+                                </div>
+                                <!-- Peg C -->
+                                <div class="flex flex-col items-center">
+                                    <div class="w-3 h-16 bg-slate-300 rounded-t-sm border-x border-slate-400"></div>
+                                    <div class="w-32 h-3 bg-slate-800 rounded-sm shadow-md"></div>
+                                    <span class="text-sm font-black mt-2 text-slate-700">(C)</span>
+                                </div>
+                            </div>
+
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> (13,NIL,2)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> (NIL,3,21)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> (1,3,2)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> (NIL, NIL,123)</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Consider the 3-2-1 Water Jug puzzle with three jugs A, B and C of capacities 3L, 2L and 1L, respectively... Which of the following states occur in the state space graph?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> (2,1,0)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> (0,2,1)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> (0,1,1)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> (2,2,0)</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Which of the following is true about the 3-2-1 Water Jug state space?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every move is reversible.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every state is reachable from every other state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> From (3,0,0) there is a path to (1,1,1).</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Which of these algorithms are complete?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Depth-First Search</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Breadth-First Search</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Best-First Search</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Hill Climbing</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Consider the 5-puzzle, a sample state is shown in the figure, it is represented in row major format "Row1/Row2", for example 201/354, where zero represents the empty space. Starting from the start state 123/450, identify the state that can be reached in exactly three moves, without duplicating any state along the path.</p>
+                            
+                            <!-- 5-Puzzle Board Representation -->
+                            <div class="flex flex-col items-center my-6">
+                                <span class="text-xs text-slate-500 mb-2 font-mono">Sample State "201/354"</span>
+                                <div class="grid grid-cols-3 gap-1.5 bg-slate-300 p-2 rounded-xl border-4 border-slate-400 shadow-md w-40">
+                                    <div class="bg-white h-12 flex items-center justify-center font-black text-xl rounded shadow-sm">2</div>
+                                    <div class="bg-slate-200 h-12 flex items-center justify-center rounded shadow-inner"></div>
+                                    <div class="bg-white h-12 flex items-center justify-center font-black text-xl rounded shadow-sm">1</div>
+                                    <div class="bg-white h-12 flex items-center justify-center font-black text-xl rounded shadow-sm">3</div>
+                                    <div class="bg-white h-12 flex items-center justify-center font-black text-xl rounded shadow-sm">5</div>
+                                    <div class="bg-white h-12 flex items-center justify-center font-black text-xl rounded shadow-sm">4</div>
+                                </div>
+                            </div>
+
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> 102/453</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> 130/425</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> 023/145</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> 201/354</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Which of the following is true about the 5-Puzzle state space that is reachable from 123/450?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every move is reversible.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> There is at least one move that is not reversible.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> There is a path from every state to every other state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every state has at most three neighbours.</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Select the algorithms that find the shortest path (measured in number of hops).</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Breadth-First Search</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Best-First Search</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Depth-First Search</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> DFID-N (opens only new nodes)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> DFID-C (reopens closed nodes)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Hill Climbing</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">N-Square-Touch is a board game played on a NxN board where each cell is either 0 or 1. When you touch a cell, all its neighbours (north, south, east, west neighbours) are toggled while the touched cell is NOT toggled. The figure shows a sample move for 2-Square-Touch game: in state 01/01 touch the bottom-right cell to reach 00/11 state. Here the boards (states) are represented in row major format "Row1/Row2". Starting from the start state 00/00, identify the state that can be reached in exactly three moves, without duplicating any state along the path.</p>
+                            
+                            <!-- 2-Square-Touch Representation -->
+                            <div class="flex justify-center items-center gap-6 my-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="flex flex-col items-center">
+                                    <div class="grid grid-cols-2 gap-1.5 bg-green-100 p-1.5 rounded-lg border-2 border-green-300 w-24 shadow-sm mb-2">
+                                        <div class="bg-white h-10 flex items-center justify-center font-mono font-bold text-lg rounded border border-slate-200">0</div>
+                                        <div class="bg-white h-10 flex items-center justify-center font-mono font-bold text-lg rounded border border-slate-200">1</div>
+                                        <div class="bg-white h-10 flex items-center justify-center font-mono font-bold text-lg rounded border border-slate-200">0</div>
+                                        <div class="bg-amber-100 h-10 flex items-center justify-center font-mono font-bold text-lg rounded border-2 border-amber-400">1</div>
+                                    </div>
+                                    <span class="font-mono text-sm font-bold">01/01</span>
+                                </div>
+                                <div class="text-slate-500 font-mono text-xs flex flex-col items-center">
+                                    <span class="bg-slate-200 px-2 py-1 rounded mb-1 font-bold">touch(2,2)</span>
+                                    <i class="fa-solid fa-arrow-right text-xl"></i>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <div class="grid grid-cols-2 gap-1.5 bg-green-100 p-1.5 rounded-lg border-2 border-green-300 w-24 shadow-sm mb-2">
+                                        <div class="bg-white h-10 flex items-center justify-center font-mono font-bold text-lg rounded border border-slate-200">0</div>
+                                        <div class="bg-white h-10 flex items-center justify-center font-mono font-bold text-lg rounded border border-slate-200">0</div>
+                                        <div class="bg-white h-10 flex items-center justify-center font-mono font-bold text-lg rounded border border-slate-200">1</div>
+                                        <div class="bg-amber-100 h-10 flex items-center justify-center font-mono font-bold text-lg rounded border-2 border-amber-400">1</div>
+                                    </div>
+                                    <span class="font-mono text-sm font-bold">00/11</span>
+                                </div>
+                            </div>
+
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> 01/10</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> 10/10</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> 11/10</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> None of these</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Which of the following is true about the 2-Square-Touch state space that is reachable from 00/00?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every move is reversible.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> There is at least one move that is not reversible.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> There is a path from every state to every other state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every state has two neighbours.</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Consider 3-puzzle (a smaller version of 8-puzzle) where a tile (carrying a numeric label) can slide one position either horizontally or vertically into the adjacent empty spot... Starting from the start state, which of the following states can be reached in exactly three moves?</p>
+                            
+                            <!-- 3-Puzzle Board Representation -->
+                            <div class="flex flex-col items-center my-6">
+                                <span class="text-xs text-slate-500 mb-2 font-mono">Start State</span>
+                                <div class="grid grid-cols-2 gap-1.5 bg-slate-300 p-2 rounded-xl border-4 border-slate-400 shadow-md w-28">
+                                    <div class="bg-white h-12 flex items-center justify-center font-black text-xl rounded shadow-sm">1</div>
+                                    <div class="bg-white h-12 flex items-center justify-center font-black text-xl rounded shadow-sm">2</div>
+                                    <div class="bg-white h-12 flex items-center justify-center font-black text-xl rounded shadow-sm">3</div>
+                                    <div class="bg-slate-200 h-12 flex items-center justify-center rounded shadow-inner"></div>
+                                </div>
+                            </div>
+
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> State A (3 over 1, 2 over empty)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> State B (2 over 1, 3 over empty)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> State C (3 over empty, 1 over 2)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> State D (2 over empty, 3 over 1)</label>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Select the statements that are true about Graph-1230. (3-puzzle state space)</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every move is reversible.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every state has a path to every other state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Some states have more than two neighbours.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every state has exactly two neighbours.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every state has exactly one neighbour.</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">The number of unique states in Graph-1230 is</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> less than 8</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> equal to 8</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> more than 8</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">On a chessboard, a knight can jump from one corner of a 2x3 (or 3x2) rectangle to the opposite corner... Consider a 4x3 chessboard where the allowable positions are marked by alphabets. The number of unique states in the state space is</p>
+                            
+                            <!-- Knight's Tour Chessboard Graphic -->
+                            <div class="flex flex-col items-center gap-2 my-6 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
+                                <div class="grid grid-cols-4 border-4 border-slate-800 w-64 bg-white shadow-md">
+                                    <div class="h-16 border border-slate-300 bg-slate-200 flex items-center justify-center font-bold text-xl text-brand-600">A</div>
+                                    <div class="h-16 border border-slate-300 flex items-center justify-center font-bold text-xl text-brand-600">B</div>
+                                    <div class="h-16 border border-slate-300 bg-slate-200 flex items-center justify-center font-bold text-xl text-brand-600">C</div>
+                                    <div class="h-16 border border-slate-300 flex items-center justify-center font-bold text-xl text-brand-600">D</div>
+                                    
+                                    <div class="h-16 border border-slate-300 flex items-center justify-center font-bold text-xl text-brand-600">E</div>
+                                    <div class="h-16 border border-slate-300 bg-slate-700 flex items-center justify-center"><i class="fa-solid fa-xmark text-slate-400"></i></div>
+                                    <div class="h-16 border border-slate-300 bg-slate-700 flex items-center justify-center"><i class="fa-solid fa-xmark text-slate-400"></i></div>
+                                    <div class="h-16 border border-slate-300 bg-slate-200 flex items-center justify-center font-bold text-xl text-brand-600">F</div>
+                                    
+                                    <div class="h-16 border border-slate-300 bg-slate-200 flex items-center justify-center font-bold text-xl text-brand-600">G</div>
+                                    <div class="h-16 border border-slate-300 flex items-center justify-center font-bold text-xl text-brand-600">H</div>
+                                    <div class="h-16 border border-slate-300 bg-slate-200 flex items-center justify-center font-bold text-xl text-brand-600">I</div>
+                                    <div class="h-16 border border-slate-300 flex items-center justify-center font-bold text-xl text-brand-600">J</div>
+                                </div>
+                                <span class="text-xs text-slate-500 font-semibold mt-2"><i class="fa-solid fa-chess-knight mr-1 text-slate-700"></i> 4x3 Knight's Board with blocked center tiles</span>
+                            </div>
+
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">MoveGen(C) is</p>
+                        </div>
+                        
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">d(G,D) is (Knight Problem Euclidean distance)</p>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Select the true statement about knight moves in the given state space.</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> Some knight-moves are reversible.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> Some knight-moves are not reversible.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> Every knight-move is reversible.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> Every knight-move is not reversible.</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Select the true statements about the given state space. (Knight Problem)</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> At least one state has no path from another state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every state has a path to every other state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every state has at most three neighbours.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Every state has eight neighbours.</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">In the given state space, is it possible for a knight to start from a position and visit the remaining positions exactly once and return to the starting position to form a knight's tour?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> Yes</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> No</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> Cannot be determined</label>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Which of the following algorithms are designed to escape local minima?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Hill Climbing</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Iterated Hill Climbing</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Nearest Neighbour Heuristic for TSP</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Tabu Search</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Stochastic Hill Climbing decides whether to move from N to a randomly selected neighbour x based on the probability function P=1/(1+e^(-deltaE/T))... Select the correct statement(s).</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> When T tends to INF, the probability of choosing good moves increases.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> When T tends to INF, the probability of choosing bad moves decreases.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> When T tends to 0, the probability of choosing good moves increases.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> When T tends to 0, the probability of choosing bad moves decreases.</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </details>
+
+                <!-- Category 2: Algorithm Tracing Comprehension -->
+                <details class="group bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="bg-brand-50 hover:bg-brand-100 cursor-pointer p-4 font-bold text-brand-800 flex justify-between items-center transition-colors">
+                        <span><i class="fa-solid fa-route mr-2"></i> SEARCH ALGORITHM TRACING (COMPREHENSION BLOCK)</span>
+                        <i class="fa-solid fa-chevron-down transform group-open:rotate-180 transition-transform text-brand-500"></i>
+                    </summary>
+                    <div class="p-6 space-y-6 bg-white border-t border-slate-200">
+                        <div class="bg-slate-50 p-4 rounded-xl text-xs text-slate-600 border border-slate-200 mb-4">
+                            <strong>Note:</strong> The following 8 questions were asked <strong>identically</strong> across 6 different graphical configurations (Grid Maps, MoveGen tables, and Knight Graphs) throughout the 2024-2026 exams. They are presented here as a single block that applies to all of them.
+                        </div>
+
+                        <!-- Generic Grid Map Search SVG -->
+                        <div class="flex justify-center my-6 bg-white p-6 rounded-2xl border-2 border-slate-200 shadow-sm overflow-x-auto">
+                            <svg width="450" height="280" viewBox="0 0 450 280">
+                                <!-- Grid Background -->
+                                <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2 4"/>
+                                </pattern>
+                                <rect width="450" height="280" fill="url(#gridPattern)" />
+                                
+                                <!-- Coordinate Edge Labels (Optional but helps visualization) -->
+                                <text x="10" y="20" font-size="10" fill="#94a3b8" font-family="sans-serif">Grid Maps (S to G)</text>
+                                
+                                <!-- Edges (Schematic Example of 2024T1) -->
+                                <path d="M60 220 L140 140 L220 220 L300 140 L380 60" stroke="#64748b" stroke-width="2.5" fill="none" />
+                                <path d="M60 220 L100 100 L220 140 L380 60" stroke="#64748b" stroke-width="2.5" fill="none" />
+                                <path d="M100 100 L180 60 L220 140 L300 220 L380 140 L380 60" stroke="#64748b" stroke-width="2.5" fill="none" />
+                                <path d="M140 140 L100 100" stroke="#64748b" stroke-width="2.5" fill="none" />
+                                <path d="M140 140 L220 220" stroke="#64748b" stroke-width="2.5" fill="none" />
+                                <path d="M300 140 L220 140" stroke="#64748b" stroke-width="2.5" fill="none" />
+                                <path d="M300 140 L380 140" stroke="#64748b" stroke-width="2.5" fill="none" />
+
+                                <!-- Nodes -->
+                                <!-- Start Node -->
+                                <g transform="translate(60,220)">
+                                    <rect x="-14" y="-14" width="28" height="28" fill="white" stroke="#ef4444" stroke-width="3" rx="4"/>
+                                    <text x="0" y="5" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#ef4444">S</text>
+                                </g>
+                                <g transform="translate(140,140)"><circle cx="0" cy="0" r="14" fill="white" stroke="#334155" stroke-width="2" /><text x="0" y="5" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#334155">B</text></g>
+                                <g transform="translate(100,100)"><circle cx="0" cy="0" r="14" fill="white" stroke="#334155" stroke-width="2" /><text x="0" y="5" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#334155">H</text></g>
+                                <g transform="translate(220,220)"><circle cx="0" cy="0" r="14" fill="white" stroke="#334155" stroke-width="2" /><text x="0" y="5" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#334155">A</text></g>
+                                <g transform="translate(220,140)"><circle cx="0" cy="0" r="14" fill="white" stroke="#334155" stroke-width="2" /><text x="0" y="5" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#334155">D</text></g>
+                                <g transform="translate(180,60)"><circle cx="0" cy="0" r="14" fill="white" stroke="#334155" stroke-width="2" /><text x="0" y="5" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#334155">I</text></g>
+                                <g transform="translate(300,220)"><circle cx="0" cy="0" r="14" fill="white" stroke="#334155" stroke-width="2" /><text x="0" y="5" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#334155">C</text></g>
+                                <g transform="translate(300,140)"><circle cx="0" cy="0" r="14" fill="white" stroke="#334155" stroke-width="2" /><text x="0" y="5" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#334155">E</text></g>
+                                <g transform="translate(380,140)"><circle cx="0" cy="0" r="14" fill="white" stroke="#334155" stroke-width="2" /><text x="0" y="5" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#334155">F</text></g>
+                                
+                                <!-- Goal Node -->
+                                <g transform="translate(380,60)">
+                                    <rect x="-14" y="-14" width="28" height="28" fill="white" stroke="#ef4444" stroke-width="3" rx="4"/>
+                                    <text x="0" y="5" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#ef4444">G</text>
+                                </g>
+                            </svg>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">List the first 4 nodes inspected by Depth First Search. List the nodes in the order they were inspected. If the algorithm terminates early then list the nodes inspected up until termination. Enter a comma separated list of node labels.</p>
+                        </div>
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">What is the path found by Depth First Search? Enter the path as a comma separated list of node labels. Enter NIL if there is no path.</p>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">List the first 4 nodes inspected by Breadth First Search. List the nodes in the order they were inspected. If the algorithm terminates early then list the nodes inspected up until termination. Enter a comma separated list of node labels.</p>
+                        </div>
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">What is the path found by Breadth First Search? Enter the path as a comma separated list of node labels. Enter NIL if there is no path.</p>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">List the first 4 nodes inspected by Best First Search. List the nodes in the order they were inspected. If the algorithm terminates early then list the nodes inspected up until termination. Enter a comma separated list of node labels.</p>
+                        </div>
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">What is the path found by Best First Search? Enter the path as a comma separated list of node labels. Enter NIL if there is no path.</p>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">List the first 4 nodes inspected by Hill Climbing. List the nodes in the order they were inspected. If the algorithm terminates early then list the nodes inspected up until termination. Enter a comma separated list of node labels.</p>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">What is the path found by Hill Climbing? Enter the path as a comma separated list of node labels. Enter NIL if there is no path.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Category 3: Genetic Algorithms -->
+                <details class="group bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="bg-brand-50 hover:bg-brand-100 cursor-pointer p-4 font-bold text-brand-800 flex justify-between items-center transition-colors">
+                        <span><i class="fa-solid fa-dna mr-2"></i> GENETIC ALGORITHMS &amp; ACO</span>
+                        <i class="fa-solid fa-chevron-down transform group-open:rotate-180 transition-transform text-brand-500"></i>
+                    </summary>
+                    <div class="p-6 space-y-6 bg-white border-t border-slate-200">
+                        
+                        <!-- TSP Cycle Graph SVG -->
+                        <div class="flex flex-col items-center my-4 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <span class="text-xs font-semibold text-slate-500 mb-4 uppercase tracking-wider">Example TSP Tour Representation Graph</span>
+                            <svg width="350" height="220" viewBox="0 0 350 220">
+                                <!-- TSP Path Edges -->
+                                <path d="M 40 110 L 120 40 L 230 40 L 310 110 L 230 180 L 120 180 Z" stroke="#94a3b8" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+                                <path d="M 120 40 L 175 90 L 230 40" stroke="#94a3b8" stroke-width="2.5" fill="none" />
+                                <path d="M 120 180 L 175 130 L 230 180" stroke="#94a3b8" stroke-width="2.5" fill="none" />
+                                
+                                <!-- Nodes -->
+                                <g transform="translate(40,110)"><circle cx="0" cy="0" r="14" fill="white" stroke="#3b82f6" stroke-width="2.5"/><text x="0" y="4" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">F</text></g>
+                                <g transform="translate(120,40)"><circle cx="0" cy="0" r="14" fill="white" stroke="#3b82f6" stroke-width="2.5"/><text x="0" y="4" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">I</text></g>
+                                <g transform="translate(230,40)"><circle cx="0" cy="0" r="14" fill="white" stroke="#3b82f6" stroke-width="2.5"/><text x="0" y="4" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">L</text></g>
+                                <g transform="translate(310,110)"><circle cx="0" cy="0" r="14" fill="white" stroke="#3b82f6" stroke-width="2.5"/><text x="0" y="4" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">E</text></g>
+                                <g transform="translate(230,180)"><circle cx="0" cy="0" r="14" fill="white" stroke="#3b82f6" stroke-width="2.5"/><text x="0" y="4" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">H</text></g>
+                                <g transform="translate(120,180)"><circle cx="0" cy="0" r="14" fill="white" stroke="#3b82f6" stroke-width="2.5"/><text x="0" y="4" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">G</text></g>
+                                <g transform="translate(175,90)"><circle cx="0" cy="0" r="14" fill="white" stroke="#3b82f6" stroke-width="2.5"/><text x="0" y="4" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">C</text></g>
+                                <g transform="translate(175,130)"><circle cx="0" cy="0" r="14" fill="white" stroke="#3b82f6" stroke-width="2.5"/><text x="0" y="4" text-anchor="middle" font-size="12" font-weight="bold" fill="#1e293b">B</text></g>
+                            </svg>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">In the Ant Colony Optimisation algorithm for solving the TSP</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> all the ants in the colony start from the same start city and then go in different directions</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> all ants construct the solution using a collaborative filtering approach</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> each ant constructs a tour independently</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> each ant constructs a tour using follow the leader principle</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Select the valid path representations of the tour. (Options collated across all graph instances)</p>
+                            <div class="pl-4 space-y-2 mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> F,I,L, E, H,A,C,K,J,D,B,G</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> C,K,J,D,B,G,F,I,L,E,H,A</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> F,I,L, E, H,A,C,K,J,D,B,G,F</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> M,U,S,K,O,V,R,T,P,L,N,Q</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> K,S,U,M,Q,N,L,P,T,R,V,O</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> J,F,K,H,E,L,D,I,M,G</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> D,I,M,G,J,F,K,H,E,L</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> J, G, F, I, L, M, E, D, H, K</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Select the valid adjacency representations of the tour. (Options collated across all graph instances)</p>
+                            <div class="pl-4 space-y-2 mt-2 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> C,G,K,B,H,I,F,A,L,D,J,E</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> H,D,A,J,L,G,B,E,F,K,C,I</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> O,N,U,Q,V,L,M,T,K,P,S,R</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> S,P,Q,L,K,T,N,V,U,R,M,O</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> E,L,K,J,M,H,F,D,I,G</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> I,L,K,J,E,M,F,H,D,G</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> F, D, I, M, K, L, G, J, H, E</label>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Convert the path representation to ordinal representation. (Various Path sequences tested)</p>
+                            <ul class="list-disc pl-8 text-sm text-slate-600 space-y-1">
+                                <li>Convert: E, A, D,C,J,L,K,F,G,I,H, B <span class="text-xs text-indigo-500 ml-2">(2024T1)</span></li>
+                                <li>Convert: O,T,M,L,U,P,K,N,R,V,S,Q <span class="text-xs text-indigo-500 ml-2">(2024T2)</span></li>
+                                <li>Convert: E,J,L,K,F,H,I,M,G,D <span class="text-xs text-indigo-500 ml-2">(2024T3)</span></li>
+                                <li>Convert: I, L, G, D, F, H, J, E, K, M <span class="text-xs text-indigo-500 ml-2">(2025T1)</span></li>
+                                <li>Convert: A, C, K,F,B,H,G,I,D, L, E,J <span class="text-xs text-indigo-500 ml-2">(2025T3)</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Two tours in path representation are given below. Generate offspring using Partially Mapped Crossover (PMX), use the locations from 5 to 8 as the mapping segment. (Various Parent combinations tested)</p>
+                            <ul class="list-disc pl-8 text-sm text-slate-600 space-y-1">
+                                <li>P1: F, I, L, E, H, A, C, K, J, D, B, G &nbsp;|&nbsp; P2: E, A, D,C,J,L,K, F, G, I, H, B</li>
+                                <li>P1: M,U,S,K,O, V, R, T, P, L, N, Q &nbsp;|&nbsp; P2: O,T,M,L, U, P, K, N, R, V, S, Q</li>
+                            </ul>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Two tours in path representation are given below. Generate offspring using Cycle Crossover. (Various Parent combinations tested)</p>
+                            <ul class="list-disc pl-8 text-sm text-slate-600 space-y-1">
+                                <li>P1: J,F,K,H, E, L, D, I, M, G &nbsp;|&nbsp; P2: E, J,L,K, F, H, I, M, G, D</li>
+                                <li>P1: J,G,F, I, L, M, E, D, H, K &nbsp;|&nbsp; P2: I, L, G, D, F, H, J, E, K, M</li>
+                                <li>P1: I,D,L,E,J,A,C,K,F,B,H,G &nbsp;|&nbsp; P2: C,K,I,D,B,E,J,A,H,L,G,F <span class="text-xs text-indigo-500 ml-2">(MSQ Variant)</span></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Single-point crossover can be used with</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> Adjacency Representation.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> Path Representation</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> Ordinal Representation</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> All of these</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">For the case of 3-edge exchange, how many child tours are possible? Enter the number of child tours in the text box. (Assume that no pair of edges from the selected 3 edges share any city in common.)</p>
+                        </div>
+
+                    </div>
+                </details>
+
+                <!-- Category 4: TSP & Combinatorics -->
+                <details class="group bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="bg-brand-50 hover:bg-brand-100 cursor-pointer p-4 font-bold text-brand-800 flex justify-between items-center transition-colors">
+                        <span><i class="fa-solid fa-calculator mr-2"></i> TSP HEURISTICS &amp; COMBINATORICS</span>
+                        <i class="fa-solid fa-chevron-down transform group-open:rotate-180 transition-transform text-brand-500"></i>
+                    </summary>
+                    <div class="p-6 space-y-6 bg-white border-t border-slate-200">
+                        
+                        <div class="bg-slate-50 p-4 rounded-xl text-xs text-slate-600 border border-slate-200 mb-4">
+                            <strong>Note:</strong> Students were provided varying N-city distance matrices. The following heuristic questions were asked repeatedly across all years.
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Start from city X and construct a tour using Nearest Neighbour Heuristic. Enter the path representation of the tour starting from city X. Use the same order in which cities were added to the tour.</p>
+                        </div>
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">What is the cost of the tour generated by Nearest Neighbour Heuristic?</p>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Construct a tour using Greedy Heuristic. Enter the path representation of the tour starting from city X.</p>
+                        </div>
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1 flex-wrap">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T1</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">What is the cost of the tour generated by Greedy Heuristic?</p>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Take X as the fulcrum node and compute the two missing values in the savings list (full list) given below. Construct the savings tour. Enter the path representation of the tour starting from city X.</p>
+                        </div>
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Use "A" as the fulcrum (base) node and use Savings Heuristic to construct the TSP tour. Identify the new edge added in the first merge operation. Enter the new edge and its savings.</p>
+                        </div>
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2025T3</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">What is the cost of the tour generated by Savings Heuristic?</p>
+                        </div>
+                        
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">What is the total number of tours possible for 4 cities?</p>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Given a 4-city tour as input, how many unique tours (unique neighbours) will be generated by a MoveGen using the 2-city exchange operator?</p>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">SA</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Consider N cities on the Euclidean plane, how many merge operations will be performed while constructing the Savings tour? Enter an expression in the textbox.</p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2026T1</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Consider N cities on the Euclidean plane, for each city, begin at that city and compute a tour using Nearest Neighbour Heuristic. From the resulting N tours, select the cheapest tour. What can you conclude about the procedure?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> This procedure will always return the optimal TSP tour.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> This procedure will not always return the optimal TSP tour.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> This procedure may not always terminate.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> This procedure will always terminate.</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </details>
+
+                <!-- Category 5: Interdisciplinary (Testing & OS) -->
+                <details class="group bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <summary class="bg-brand-50 hover:bg-brand-100 cursor-pointer p-4 font-bold text-brand-800 flex justify-between items-center transition-colors">
+                        <span><i class="fa-solid fa-microchip mr-2"></i> INTERDISCIPLINARY (OS &amp; TESTING)</span>
+                        <i class="fa-solid fa-chevron-down transform group-open:rotate-180 transition-transform text-brand-500"></i>
+                    </summary>
+                    <div class="p-6 space-y-6 bg-white border-t border-slate-200">
+                        
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Consider the CFG given below. From the given options, identify the valid test path(s).</p>
+                            
+                            <!-- Control Flow Graph (CFG) SVG -->
+                            <div class="flex justify-center my-6 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+                                <svg width="420" height="200" viewBox="0 0 420 200">
+                                    <defs>
+                                        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                                            <polygon points="0 0, 8 3, 0 6" fill="#475569" />
+                                        </marker>
+                                    </defs>
+                                    
+                                    <!-- Edges -->
+                                    <line x1="20" y1="120" x2="60" y2="120" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)" />
+                                    <line x1="100" y1="120" x2="160" y2="120" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)" />
+                                    <line x1="195" y1="105" x2="245" y2="55" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)" />
+                                    <line x1="275" y1="55" x2="325" y2="105" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)" />
+                                    <line x1="200" y1="120" x2="320" y2="120" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)" />
+                                    <line x1="360" y1="120" x2="390" y2="120" stroke="#475569" stroke-width="2" marker-end="url(#arrowhead)" />
+                                    
+                                    <!-- Edge Labels -->
+                                    <text x="200" y="80" text-anchor="middle" font-family="monospace" font-size="12" fill="#334155" transform="rotate(-45 200,80)">x&lt;y</text>
+                                    <text x="260" y="140" text-anchor="middle" font-family="monospace" font-size="12" fill="#334155">x&gt;=y</text>
+                                    
+                                    <!-- Nodes -->
+                                    <!-- Node 1 -->
+                                    <circle cx="80" cy="120" r="20" fill="white" stroke="#0f172a" stroke-width="2" />
+                                    <text x="80" y="125" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#0f172a">1</text>
+                                    <text x="80" y="155" text-anchor="middle" font-family="monospace" font-size="11" fill="#475569">x=a</text>
+                                    <text x="80" y="170" text-anchor="middle" font-family="monospace" font-size="11" fill="#475569">y=b</text>
+                                    <text x="80" y="185" text-anchor="middle" font-family="monospace" font-size="11" fill="#475569">z=c</text>
+                                    
+                                    <!-- Node 2 -->
+                                    <circle cx="180" cy="120" r="20" fill="white" stroke="#0f172a" stroke-width="2" />
+                                    <text x="180" y="125" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#0f172a">2</text>
+                                    
+                                    <!-- Node 3 -->
+                                    <circle cx="260" cy="40" r="20" fill="white" stroke="#0f172a" stroke-width="2" />
+                                    <text x="260" y="45" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#0f172a">3</text>
+                                    <text x="260" y="15" text-anchor="middle" font-family="monospace" font-size="12" fill="#475569">y=z</text>
+                                    
+                                    <!-- Node 4 -->
+                                    <circle cx="340" cy="120" r="20" fill="white" stroke="#0f172a" stroke-width="2" />
+                                    <text x="340" y="125" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#0f172a">4</text>
+                                    <text x="340" y="155" text-anchor="middle" font-family="monospace" font-size="11" fill="#475569">x=z</text>
+                                    
+                                    <!-- Node 5 (Terminal) -->
+                                    <circle cx="410" cy="120" r="20" fill="white" stroke="#0f172a" stroke-width="2" />
+                                    <circle cx="410" cy="120" r="15" fill="white" stroke="#0f172a" stroke-width="2" />
+                                    <text x="410" y="125" text-anchor="middle" font-family="sans-serif" font-size="14" font-weight="bold" fill="#0f172a">5</text>
+                                    <text x="410" y="155" text-anchor="middle" font-family="monospace" font-size="11" fill="#475569">print(x)</text>
+                                    <text x="410" y="170" text-anchor="middle" font-family="monospace" font-size="11" fill="#475569">print(y)</text>
+                                </svg>
+                            </div>
+
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> [1, 2, 4, 6] (Note: Originally options likely meant nodes 1-5)</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> [1, 2, 4, 5, 6]</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> [1, 3, 6, 1, 2, 4, 6]</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> [1, 3, 6, 1, 2, 4, 5]</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">How many unique du-paths are there for the variable x?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> 2</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> 3</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> 4</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> 5</label>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">How many du-pairs are there for the variable x?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> 2</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> 3</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> 4</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> 5</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 pb-4 border-b border-slate-100">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MCQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">In xv6, what does the allocproc function do?</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> It allocates the first user process and sets up its page table.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> It invokes scheduler directly to run the process.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> It sets the process state to SLEEPING.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="radio" disabled class="mt-1"> It initializes the program counter and stack pointer in the trapframe.</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex gap-2 items-center mb-1">
+                                <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">MSQ</span>
+                                <span class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">2024T2</span>
+                            </div>
+                            <p class="text-sm font-semibold text-slate-800">Consider the following processes in an xv6-like operating system: Process Q1 has been created but has not yet been scheduled to run. Process Q2 is currently executing instructions on the CPU. Process Q3 is waiting for a child process to finish execution. Process Q4 has terminated, but its parent process has already collected its exit status. Select all the correct statements about the states of the processes.</p>
+                            <div class="pl-4 space-y-2 mt-2">
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Process Q1 is in the RUNNABLE state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Process Q2 is in the RUNNING state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Process Q3 is in the RUNNABLE state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Process Q3 is in the SLEEPING state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Process Q4 is in the ZOMBIE state.</label>
+                                <label class="flex items-start gap-2 text-sm text-slate-600"><input type="checkbox" disabled class="mt-1"> Process Q4 is in the SLEEPING state.</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </details>
+
+            </div>
+        </div>
+
+        <!-- ==================== TAB: SIMULATORS ==================== -->
+        <div id="content-simulators" class="tab-pane hidden space-y-6">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Setup Panel -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-brand-500"></i> Simulator Settings
+                    </h3>
+                    <p class="text-xs text-slate-500">Configure parameters here to run an instant visual calculation trace.</p>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Parent 1 (P1)</label>
+                            <input type="text" id="sim-p1" value="F, I, L, E, H, A, C, K, J, D, B, G" class="w-full text-sm p-2 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500 font-mono">
+                            <span class="text-[10px] text-slate-400">Comma separated array of items</span>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Parent 2 (P2)</label>
+                            <input type="text" id="sim-p2" value="E, A, D, C, J, L, K, F, G, I, H, B" class="w-full text-sm p-2 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500 font-mono">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Cut Start (1-based)</label>
+                                <input type="number" id="sim-start" value="5" min="1" max="12" class="w-full text-sm p-2 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Cut End (1-based)</label>
+                                <input type="number" id="sim-end" value="8" min="1" max="12" class="w-full text-sm p-2 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Crossover Operator</label>
+                            <select id="sim-type" class="w-full text-sm p-2 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500 bg-white">
+                                <option value="pmx">Partially Mapped Crossover (PMX)</option>
+                                <option value="cycle">Cycle Crossover (CX)</option>
+                            </select>
+                        </div>
+
+                        <button onclick="runCrossover()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 px-4 rounded-xl shadow transition-all duration-150 flex items-center justify-center gap-2 mt-4">
+                            <i class="fa-solid fa-play"></i> Run Visual Trace
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Visual Output Panel -->
+                <div class="lg:col-span-2 bg-slate-900 text-white p-6 rounded-2xl shadow-inner flex flex-col justify-between min-h-[400px]">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                            <h3 class="font-bold text-sm text-slate-300 tracking-wider uppercase flex items-center gap-2">
+                                <i class="fa-solid fa-square-poll-vertical text-emerald-400"></i> Step-by-Step Traversal Output
+                            </h3>
+                            <span class="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">simulation terminal</span>
+                        </div>
+
+                        <div id="sim-terminal" class="space-y-4 font-mono text-sm leading-relaxed overflow-y-auto max-h-[350px] text-slate-300 pr-2">
+                            <p class="text-slate-500 italic">Click "Run Visual Trace" to view execution traces...</p>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Status -->
+                    <div id="sim-summary" class="bg-slate-800/50 border border-slate-800 p-3.5 rounded-xl mt-4 text-xs text-slate-400 flex flex-col gap-1 hidden">
+                        <div class="flex justify-between">
+                            <span class="font-semibold text-slate-300">Child 1 (O1):</span>
+                            <span id="child1-result" class="font-mono text-emerald-400 font-bold"></span>
+                        </div>
+                        <div class="flex justify-between mt-1">
+                            <span class="font-semibold text-slate-300">Child 2 (O2):</span>
+                            <span id="child2-result" class="font-mono text-emerald-400 font-bold"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manhattan & Euclidean Grid Assistant -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-brand-500"></i> Grid Distance &amp; Heuristic Tool
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-1">
+                        In many of the exams, you must compute the Manhattan distance $|x_1 - x_2| + |y_1 - y_2|$ or Euclidean distance $\sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}$ between nodes. Use this quick calculator to double-check your calculations.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Point 1 X ($x_1$)</label>
+                        <input type="number" id="grid-x1" value="2" class="w-full text-sm p-2 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Point 1 Y ($y_1$)</label>
+                        <input type="number" id="grid-y1" value="3" class="w-full text-sm p-2 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Point 2 X ($x_2$)</label>
+                        <input type="number" id="grid-x2" value="8" class="w-full text-sm p-2 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Point 2 Y ($y_2$)</label>
+                        <input type="number" id="grid-y2" value="9" class="w-full text-sm p-2 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl flex justify-between items-center">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-800 uppercase tracking-wider block">Manhattan Distance</span>
+                            <p class="text-xs text-indigo-500 mt-1">Used for grid map heuristics (S-G puzzles)</p>
+                        </div>
+                        <span id="res-manhattan" class="text-2xl font-black text-indigo-900">12</span>
+                    </div>
+
+                    <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-xl flex justify-between items-center">
+                        <div>
+                            <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider block">Euclidean Distance</span>
+                            <p class="text-xs text-emerald-500 mt-1">Used for chessboard knight puzzles (2026T1)</p>
+                        </div>
+                        <span id="res-euclidean" class="text-2xl font-black text-emerald-900">8.49</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+            <p class="text-sm">Master Study Strategy and Companion &bull; IIT Madras BS Program</p>
+            <p class="text-xs text-slate-500">Made dynamically to assist students with procedural hand calculations and exam preparation patterns.</p>
+        </div>
+    </footer>
+
+    <!-- Strategic Interaction Scripts -->
+    <script>
+        // Tab switching logic
+        function switchTab(tabId) {
+            // Hide all tab content panes
+            const panes = document.querySelectorAll('.tab-pane');
+            panes.forEach(pane => pane.classList.add('hidden'));
+            
+            // Show selected pane
+            const targetPane = document.getElementById('content-' + tabId);
+            if (targetPane) {
+                targetPane.classList.remove('hidden');
+            }
+
+            // Update active state class of tab buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-brand-50', 'text-brand-700');
+                btn.classList.add('text-slate-600', 'hover:text-slate-950', 'hover:bg-slate-50');
+            });
+
+            const activeButton = document.getElementById('tab-' + tabId);
+            if (activeButton) {
+                activeButton.classList.add('bg-brand-50', 'text-brand-700');
+                activeButton.classList.remove('text-slate-600', 'hover:text-slate-950', 'hover:bg-slate-50');
+            }
+        }
+
+        // Checklist local storage integration & visual calculations
+        function loadChecklistState() {
+            const checkboxes = document.querySelectorAll("input[type='checkbox']");
+            checkboxes.forEach(chk => {
+                const state = localStorage.getItem(chk.id);
+                if (state === "true") {
+                    chk.checked = true;
+                }
+            });
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll("input[type='checkbox']");
+            let checkedCount = 0;
+            checkboxes.forEach(chk => {
+                localStorage.setItem(chk.id, chk.checked);
+                if (chk.checked) checkedCount++;
+            });
+
+            const percentage = checkboxes.length > 0 ? Math.round((checkedCount / checkboxes.length) * 100) : 0;
+            
+            // Update labels and progress bar
+            document.getElementById('progress-percent').innerText = percentage + "% Complete";
+            document.getElementById('progress-bar-fill').style.width = percentage + "%";
+        }
+
+        // Interactive Distance Helper
+        function setupGridCalculator() {
+            const inputs = ['grid-x1', 'grid-y1', 'grid-x2', 'grid-y2'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', () => {
+                    const x1 = parseFloat(document.getElementById('grid-x1').value) || 0;
+                    const y1 = parseFloat(document.getElementById('grid-y1').value) || 0;
+                    const x2 = parseFloat(document.getElementById('grid-x2').value) || 0;
+                    const y2 = parseFloat(document.getElementById('grid-y2').value) || 0;
+
+                    // Manhattan
+                    const manhattan = Math.abs(x1 - x2) + Math.abs(y1 - y2);
+                    // Euclidean
+                    const euclidean = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+
+                    document.getElementById('res-manhattan').innerText = manhattan;
+                    document.getElementById('res-euclidean').innerText = euclidean.toFixed(2);
+                });
+            });
+        }
+
+        // Crossover Tracing Simulator Logic (PMX and Cycle Crossover)
+        function runCrossover() {
+            const p1Str = document.getElementById('sim-p1').value;
+            const p2Str = document.getElementById('sim-p2').value;
+            const startIdx = parseInt(document.getElementById('sim-start').value) - 1; // Convert 1-based to 0-based
+            const endIdx = parseInt(document.getElementById('sim-end').value) - 1;
+            const type = document.getElementById('sim-type').value;
+
+            // Simple validation and array clean
+            const p1 = p1Str.split(',').map(item => item.trim().toUpperCase());
+            const p2 = p2Str.split(',').map(item => item.trim().toUpperCase());
+
+            const terminal = document.getElementById('sim-terminal');
+            terminal.innerHTML = ''; // Reset terminal output
+
+            if (p1.length !== p2.length || p1.length === 0) {
+                terminal.innerHTML = '<span class="text-rose-400">Error: Both parents must contain an identical quantity of cities!</span>';
+                return;
+            }
+
+            if (startIdx < 0 || endIdx >= p1.length || startIdx > endIdx) {
+                terminal.innerHTML = '<span class="text-rose-400">Error: Invalid segment indexes! Make sure 1 &le; Start &le; End &le; Length.</span>';
+                return;
+            }
+
+            if (type === 'pmx') {
+                tracePMX(p1, p2, startIdx, endIdx);
+            } else if (type === 'cycle') {
+                traceCycle(p1, p2);
+            }
+        }
+
+        // PMX hand-tracing logic with step-by-step terminal output
+        function tracePMX(p1, p2, start, end) {
+            const len = p1.length;
+            const terminal = document.getElementById('sim-terminal');
+            
+            // Step 1: Copy mappings
+            let step1 = `<span class="text-brand-400 font-bold">Step 1: Identifying boundaries [${start + 1} to ${end + 1}]</span><br/>`;
+            step1 += `Segment 1 (P1): [${p1.slice(start, end + 1).join(', ')}]<br/>`;
+            step1 += `Segment 2 (P2): [${p2.slice(start, end + 1).join(', ')}]<br/>`;
+            
+            // Build mappings object
+            let mappingsP1toP2 = {};
+            let mappingsP2toP1 = {};
+            for (let i = start; i <= end; i++) {
+                mappingsP1toP2[p1[i]] = p2[i];
+                mappingsP2toP1[p2[i]] = p1[i];
+            }
+            
+            step1 += `<span class="text-slate-400">Derived Mapping Dictionary:</span><br/>`;
+            for (let k in mappingsP1toP2) {
+                step1 += ` &bull; ${k} &harr; ${mappingsP1toP2[k]}<br/>`;
+            }
+            terminal.innerHTML += `<p>${step1}</p>`;
+
+            // Initialize children with mapped segment, others empty
+            let o1 = Array(len).fill(null);
+            let o2 = Array(len).fill(null);
+            
+            for (let i = start; i <= end; i++) {
+                o1[i] = p2[i]; // Segment of P2 copied to O1
+                o2[i] = p1[i]; // Segment of P1 copied to O2
+            }
+
+            // Step 2: Filling in the remaining values for O1
+            let step2 = `<span class="text-brand-400 font-bold">Step 2: Resolving Child 1 (O1)</span><br/>`;
+            step2 += `Initial O1: [${o1.map(x => x === null ? '_' : x).join(', ')}]<br/>`;
+
+            for (let i = 0; i < len; i++) {
+                if (i >= start && i <= end) continue; // Skip mapping segment
+                
+                let candidate = p1[i];
+                let val = candidate;
+                let pathStr = `${candidate}`;
+                
+                // Trace mapped values until no mapping exists
+                while (o1.slice(start, end + 1).includes(val)) {
+                    let nextVal = mappingsP2toP1[val];
+                    pathStr += ` &rarr; ${nextVal}`;
+                    val = nextVal;
+                }
+                
+                o1[i] = val;
+                if (val !== candidate) {
+                    step2 += `Position ${i+1}: '${candidate}' conflicted in active window. Resolving path: ${pathStr}. Resolved to '${val}'.<br/>`;
+                } else {
+                    step2 += `Position ${i+1}: No conflict for '${candidate}'. Inserted directly.<br/>`;
+                }
+            }
+            step2 += `<span class="text-emerald-400 font-bold">Final Child 1: [${o1.join(', ')}]</span><br/>`;
+            terminal.innerHTML += `<p>${step2}</p>`;
+
+            // Step 3: Filling in remaining values for O2
+            let step3 = `<span class="text-brand-400 font-bold">Step 3: Resolving Child 2 (O2)</span><br/>`;
+            step3 += `Initial O2: [${o2.map(x => x === null ? '_' : x).join(', ')}]<br/>`;
+
+            for (let i = 0; i < len; i++) {
+                if (i >= start && i <= end) continue; // Skip mapping segment
+                
+                let candidate = p2[i];
+                let val = candidate;
+                let pathStr = `${candidate}`;
+                
+                // Trace mapped values until no mapping exists
+                while (o2.slice(start, end + 1).includes(val)) {
+                    let nextVal = mappingsP1toP2[val];
+                    pathStr += ` &rarr; ${nextVal}`;
+                    val = nextVal;
+                }
+                
+                o2[i] = val;
+                if (val !== candidate) {
+                    step3 += `Position ${i+1}: '${candidate}' conflicted in active window. Resolving path: ${pathStr}. Resolved to '${val}'.<br/>`;
+                } else {
+                    step3 += `Position ${i+1}: No conflict for '${candidate}'. Inserted directly.<br/>`;
+                }
+            }
+            step3 += `<span class="text-emerald-400 font-bold">Final Child 2: [${o2.join(', ')}]</span><br/>`;
+            terminal.innerHTML += `<p>${step3}</p>`;
+
+            // Show summary output
+            document.getElementById('sim-summary').classList.remove('hidden');
+            document.getElementById('child1-result').innerText = o1.join(',');
+            document.getElementById('child2-result').innerText = o2.join(',');
+        }
+
+        // Cycle crossover tracing logic
+        function traceCycle(p1, p2) {
+            const len = p1.length;
+            const terminal = document.getElementById('sim-terminal');
+            
+            let o1 = Array(len).fill(null);
+            let o2 = Array(len).fill(null);
+
+            let step1 = `<span class="text-brand-400 font-bold">Step 1: Identifying Cycles</span><br/>`;
+            
+            let cycleNum = 1;
+            let visited = Array(len).fill(false);
+            let cycles = [];
+
+            while (visited.includes(false)) {
+                let startPos = visited.indexOf(false);
+                let currentPos = startPos;
+                let currentCycle = [];
+
+                step1 += `Traced Cycle #${cycleNum} starting at index ${startPos + 1} (${p1[startPos]}):<br/>`;
+                
+                do {
+                    visited[currentPos] = true;
+                    currentCycle.push(currentPos);
+                    let mappedValue = p2[currentPos];
+                    let nextPos = p1.indexOf(mappedValue);
+                    
+                    step1 += ` &bull; Pos ${currentPos + 1}: ${p1[currentPos]} maps to ${mappedValue} in P2. Moving to Pos ${nextPos + 1}<br/>`;
+                    currentPos = nextPos;
+                } while (currentPos !== startPos && currentPos !== -1);
+
+                cycles.push(currentCycle);
+                step1 += `<span class="text-amber-400">Completed Cycle #${cycleNum}: indices [${currentCycle.map(x => x + 1).join(', ')}]</span><br/><br/>`;
+                cycleNum++;
+            }
+            terminal.innerHTML += `<p>${step1}</p>`;
+
+            // Step 2: Assign cycles to children alternately
+            let step2 = `<span class="text-brand-400 font-bold">Step 2: Assigning Alternate Cycles to Children</span><br/>`;
+            for (let c = 0; c < cycles.length; c++) {
+                let indexes = cycles[c];
+                if (c % 2 === 0) {
+                    step2 += `Cycle #${c+1} assigned directly: Parents copied. indices [${indexes.map(x=>x+1).join(', ')}]<br/>`;
+                    indexes.forEach(idx => {
+                        o1[idx] = p1[idx];
+                        o2[idx] = p2[idx];
+                    });
+                } else {
+                    step2 += `Cycle #${c+1} assigned alternately: Parents swapped. indices [${indexes.map(x=>x+1).join(', ')}]<br/>`;
+                    indexes.forEach(idx => {
+                        o1[idx] = p2[idx];
+                        o2[idx] = p1[idx];
+                    });
+                }
+            }
+            
+            step2 += `<br/><span class="text-emerald-400 font-bold">Final Child 1: [${o1.join(', ')}]</span><br/>`;
+            step2 += `<span class="text-emerald-400 font-bold">Final Child 2: [${o2.join(', ')}]</span><br/>`;
+            terminal.innerHTML += `<p>${step2}</p>`;
+
+            // Show summary output
+            document.getElementById('sim-summary').classList.remove('hidden');
+            document.getElementById('child1-result').innerText = o1.join(',');
+            document.getElementById('child2-result').innerText = o2.join(',');
+        }
+
+        // Initialize state on load
+        window.onload = function() {
+            loadChecklistState();
+            setupGridCalculator();
+            initAIAnswers();
+        };
+
+        // Dynamically inject AI Answer buttons to all Past Year Questions
+        function initAIAnswers() {
+            // Target every individual question container in the Past Year Questions tab
+            const qContainers = document.querySelectorAll('#content-questions .space-y-3.pb-4, #content-questions .space-y-3:last-child');
+            
+            qContainers.forEach((container, index) => {
+                // Prevent duplicate buttons if function runs multiple times
+                if(container.querySelector('.ai-reveal-btn')) return;
+
+                const ansId = 'ai-ans-' + index;
+                const text = container.innerText.toLowerCase();
+                
+                // Advanced AI logic mapping specific questions to their exact PDF answers
+                let aiAnswer = "Answer varies based on the exact graph/matrix provided in the specific exam variant.";
+                
+                // State Space Search & Properties
+                if (text.includes("count the number of nodes visited in each cycle of dfid")) aiAnswer = "to compute the complexity of search";
+                else if (text.includes("guaranteed in any state space")) aiAnswer = "None of these.";
+                else if (text.includes("tower of hanoi")) aiAnswer = "Reachable states: (13,NIL,2) and (NIL,3,21).";
+                else if (text.includes("3-2-1 water jug puzzle")) aiAnswer = "Reachable states typically include permutations summing to 3L, such as (2,1,0) and (0,2,1).";
+                else if (text.includes("true about the 3-2-1 water jug")) aiAnswer = "Every move is reversible.";
+                else if (text.includes("which of these algorithms are complete")) aiAnswer = "Breadth-First Search";
+                else if (text.includes("5-puzzle state space that is reachable")) aiAnswer = "Every move is reversible.";
+                else if (text.includes("consider the 5-puzzle, a sample state")) aiAnswer = "102/453 and 023/145";
+                else if (text.includes("find the shortest path (measured in number of hops)")) aiAnswer = "Breadth-First Search, DFID-N (opens only new nodes), and DFID-C (reopens closed nodes).";
+                else if (text.includes("n-square-touch") && text.includes("exactly three moves")) aiAnswer = "01/10";
+                else if (text.includes("2-square-touch state space")) aiAnswer = "Every move is reversible.";
+                else if (text.includes("3-puzzle (a smaller version")) aiAnswer = "State A and State D (dependent on specific graph generation).";
+                else if (text.includes("true about graph-1230")) aiAnswer = "Every move is reversible.\nEvery state has a path to every other state.";
+                else if (text.includes("unique states in graph-1230")) aiAnswer = "equal to 8";
+                else if (text.includes("4x3 chessboard where the allowable positions")) aiAnswer = "10";
+                else if (text.includes("movegen(c) is")) aiAnswer = "E, H, J";
+                else if (text.includes("d(g,d) is")) aiAnswer = "3.6";
+                else if (text.includes("about knight moves in the given state space")) aiAnswer = "Every knight-move is reversible.";
+                else if (text.includes("true statements about the given state space. (knight")) aiAnswer = "At least one state has no path from another state.";
+                else if (text.includes("form a knight's tour")) aiAnswer = "No";
+                else if (text.includes("designed to escape local minima")) aiAnswer = "Iterated Hill Climbing, Tabu Search";
+                else if (text.includes("stochastic hill climbing decides")) aiAnswer = "When T tends to 0, the probability of choosing bad moves decreases.";
+                
+                // Search Block
+                else if (text.includes("first 4 nodes inspected by depth first")) aiAnswer = "Format: S,A,B,C (Exact trace depends on specific graph, e.g., 2024T1 vs 2026T1).";
+                else if (text.includes("path found by depth first")) aiAnswer = "Format: S,A,B,C,G (Returns NIL if no path).";
+                else if (text.includes("first 4 nodes inspected by breadth first")) aiAnswer = "Format: S,A,D,H (Explores level by level).";
+                else if (text.includes("path found by breadth first")) aiAnswer = "Format: S,H,F,G (Returns shortest hop path).";
+                else if (text.includes("first 4 nodes inspected by best first")) aiAnswer = "Format: S,D,E,B (Sorts OPEN by heuristic).";
+                else if (text.includes("path found by best first")) aiAnswer = "Format: S,D,E,B,C,G";
+                else if (text.includes("first 4 nodes inspected by hill climbing")) aiAnswer = "Format: S,D,E (Often gets stuck in local maxima).";
+                else if (text.includes("path found by hill climbing")) aiAnswer = "Typically NIL (Often fails to find goal due to local maxima).";
+                
+                // Genetic & ACO
+                else if (text.includes("ant colony optimisation algorithm")) aiAnswer = "each ant constructs a tour independently";
+                else if (text.includes("valid path representations")) aiAnswer = "Select sequences that visit every node exactly once and match the edges of the given graph.";
+                else if (text.includes("valid adjacency representations")) aiAnswer = "Value at index i is the city visited immediately after city i.";
+                else if (text.includes("convert the path representation") && text.includes("ordinal")) aiAnswer = "Subtract reference index recursively. Always ends in 1. (e.g., 5,1,3,2...)";
+                else if (text.includes("partially mapped crossover (pmx)")) aiAnswer = "Child 1: [E,L,D,F,H,A,C,K,G,I,J,B] (Example from 2024T1).";
+                else if (text.includes("cycle crossover")) aiAnswer = "Child 1: [J,F,L,K,E,H,D,I,M,G] (Example from 2024T3).";
+                else if (text.includes("single-point crossover can be used with")) aiAnswer = "Path Representation";
+                else if (text.includes("3-edge exchange")) aiAnswer = "4";
+                
+                // TSP Combinatorics
+                else if (text.includes("total number of tours possible for 4 cities")) aiAnswer = "3 (Formula: (N-1)! / 2 for symmetrical)";
+                else if (text.includes("unique tours (unique neighbours) will be generated by a movegen using the 2-city exchange")) aiAnswer = "2";
+                else if (text.includes("merge operations will be performed while constructing the savings tour")) aiAnswer = "N-2";
+                else if (text.includes("compute a tour using nearest neighbour heuristic. from the resulting n tours")) aiAnswer = "This procedure will not always return the optimal TSP tour.";
+                else if (text.includes("nearest neighbour heuristic")) aiAnswer = "Greedily select the closest unvisited city. Cost e.g., 229, 222, 252.";
+                else if (text.includes("cost of the tour generated by nearest neighbour")) aiAnswer = "e.g., 229 (2024T1), 222 (2024T2), 252 (2024T3).";
+                else if (text.includes("construct a tour using greedy heuristic")) aiAnswer = "Sort edges ascending, pick smallest valid edge. Format: C,E,F,B,D,A.";
+                else if (text.includes("cost of the tour generated by greedy")) aiAnswer = "e.g., 224 (2024T1), 227 (2024T2).";
+                else if (text.includes("savings list (full list) given below. construct the savings tour")) aiAnswer = "Calculate missing values using S(i,j) = d(i,F)+d(j,F)-d(i,j). Merge descending.";
+                else if (text.includes("cost of the tour generated by savings heuristic")) aiAnswer = "e.g., 234 (2026T1).";
+                
+                // Interdisciplinary
+                else if (text.includes("identify the valid test path")) aiAnswer = "[1, 2, 4, 5, 6] (Node sequence through CFG).";
+                else if (text.includes("unique du-paths are there for the variable x")) aiAnswer = "4";
+                else if (text.includes("du-pairs are there for the variable x")) aiAnswer = "3";
+                else if (text.includes("allocproc function do")) aiAnswer = "It allocates the first user process and sets up its page table.";
+                else if (text.includes("process q1 has been created but has not yet been scheduled")) aiAnswer = "Process Q1 is in the RUNNABLE state.\nProcess Q2 is in the RUNNING state.\nProcess Q4 is in the ZOMBIE state.";
+
+                // Construct the Button and Hidden Answer Box HTML
+                const btnHtml = `
+                <div class="mt-4 border-t border-slate-100 pt-3 ai-reveal-container">
+                    <button onclick="document.getElementById('${ansId}').classList.toggle('hidden')" class="ai-reveal-btn text-[11px] font-bold uppercase tracking-wider bg-brand-100 hover:bg-brand-200 text-brand-800 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-eye"></i> Reveal Answer
+                    </button>
+                    <div id="${ansId}" class="hidden mt-3 p-3.5 bg-slate-800 border border-slate-700 rounded-xl shadow-inner">
+                        <p class="text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-robot text-brand-400"></i> AI Generated Solution:
+                        </p>
+                        <p class="text-sm text-white font-mono bg-slate-900 p-2.5 rounded-lg border border-slate-700 mb-2 shadow-sm whitespace-pre-line">${aiAnswer}</p>
+                        <p class="text-[10px] text-rose-400 italic font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Note: AI based answer, maybe be wrong.
+                        </p>
+                    </div>
+                </div>
+                `;
+                
+                // Inject it at the bottom of the question container
+                container.insertAdjacentHTML('beforeend', btnHtml);
+            });
+        }
+    </script>
+</body>
+</html>
